@@ -1,35 +1,50 @@
-import { useState } from 'react';
-import viteLogo from '/vite.svg';
-import reactLogo from './assets/react.svg';
-import './App.css';
+import * as Blockly from 'blockly/core';
+import { useEffect, useRef } from 'react';
+import 'blockly/blocks';
+import 'blockly/javascript';
+import * as Ja from 'blockly/msg/ja';
 
-function App() {
-  const [count, setCount] = useState(0);
+export function App() {
+  const blocklyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!blocklyRef.current) {
+      return;
+    }
+
+    Blockly.setLocale(Ja.default ?? Ja);
+
+    const toolbox = {
+      // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
+      kind: 'flyoutToolbox',
+      // The contents is the blocks and other items that exist in your toolbox.
+      contents: [
+        {
+          kind: 'block',
+          type: 'controls_if',
+        },
+        {
+          kind: 'block',
+          type: 'controls_whileUntil',
+        },
+        // You can add more blocks to this array.
+      ],
+    };
+
+    const workspace = Blockly.inject(blocklyRef.current, { toolbox: toolbox });
+
+    return () => {
+      workspace.dispose();
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noopener">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noopener">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div
+      ref={blocklyRef}
+      style={{
+        width: '100dvw',
+        height: '100dvh',
+      }}
+    />
   );
 }
-
-export default App;

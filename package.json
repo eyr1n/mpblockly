@@ -12,6 +12,7 @@
     "biome": "biome check"
   },
   "dependencies": {
+    "blockly": "^12.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
