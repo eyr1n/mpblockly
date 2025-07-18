@@ -50,8 +50,29 @@ export function App() {
           aria-label="Basic button group"
         >
           <Button>新規</Button>
-          <Button>開く</Button>
-          <Button>上書き保存</Button>
+          <Button
+            onClick={async () => {
+              const state = await window.electronAPI.workspaceOpen();
+              if (state) {
+                Blockly.serialization.workspaces.load(
+                  state.workspace,
+                  workspace.current,
+                );
+              }
+            }}
+          >
+            開く
+          </Button>
+          <Button
+            onClick={async () => {
+              const state = Blockly.serialization.workspaces.save(
+                workspace.current,
+              );
+              await window.electronAPI.workspaceSaveAs(state);
+            }}
+          >
+            上書き保存
+          </Button>
           <Button>別名保存</Button>
           <Button>Picoに書き込み</Button>
         </ButtonGroup>
