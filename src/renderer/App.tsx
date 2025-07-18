@@ -1,69 +1,42 @@
 import * as Blockly from 'blockly/core';
-import { useEffect, useRef, useState } from 'react';
-import 'blockly/blocks';
-import { pythonGenerator } from 'blockly/python';
-import * as Ja from 'blockly/msg/ja';
+import { useEffect, useRef } from 'react';
+import { ReactBlockly } from './blockly/ReactBlockly';
+import { block, category, categoryToolbox } from './blockly/toolbox';
+import { unchi } from './blocks';
+
+const toolbox = categoryToolbox([
+  category('ほげ', [
+    unchi,
+    block('text'),
+    category('ほげ1', [
+      unchi,
+      block('controls_whileUntil'),
+      block('controls_if'),
+    ]),
+    block('controls_if'),
+  ]),
+]);
 
 export function App() {
-  const blocklyRef = useRef<HTMLDivElement>(null);
-
-  const [code, setCode] = useState('');
-  console.log(code);
+  const workspace = useRef<Blockly.Workspace>(null);
 
   useEffect(() => {
-    if (!blocklyRef.current) {
-      return;
-    }
-
-    Blockly.setLocale(Ja.default ?? Ja);
-
-    const toolbox = {
-      // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
-      kind: 'flyoutToolbox',
-      // The contents is the blocks and other items that exist in your toolbox.
-      contents: [
-        {
-          kind: 'block',
-          type: 'controls_if',
-        },
-        {
-          kind: 'block',
-          type: 'controls_whileUntil',
-        },
-        // You can add more blocks to this array.
-      ],
-    };
-
-    const supportedEvents = new Set<string>([
-      Blockly.Events.BLOCK_CHANGE,
-      Blockly.Events.BLOCK_CREATE,
-      Blockly.Events.BLOCK_DELETE,
-      Blockly.Events.BLOCK_MOVE,
-    ]);
-
-    function updateCode(event: Blockly.Events.Abstract) {
-      if (workspace.isDragging()) return; // Don't update while changes are happening.
-      if (!supportedEvents.has(event.type)) return;
-
-      const code = pythonGenerator.workspaceToCode(workspace);
-      setCode(code);
-    }
-
-    const workspace = Blockly.inject(blocklyRef.current, { toolbox: toolbox });
-    workspace.addChangeListener(updateCode);
+    const id = setInterval(() => {
+      if (workspace.current) {
+        const state = Blockly.serialization.workspaces.save(workspace.current);
+        console.log(state);
+        //Blockly.serialization.workspaces.load(state, workspace);
+      }
+    }, 1000);
 
     return () => {
-      workspace.dispose();
+      clearInterval(id);
     };
   }, []);
 
   return (
-    <div
-      ref={blocklyRef}
-      style={{
-        width: '100dvw',
-        height: '100dvh',
-      }}
-    />
+    <div style={{ width: '100dvw', height: '50dvh' }}>
+      <ReactBlockly ref={workspace} toolbox={toolbox} />
+    </div>
   );
 }
