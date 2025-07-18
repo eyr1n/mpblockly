@@ -1,4 +1,10 @@
-import { Box, Button, ButtonGroup, Stack } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  ScopedCssBaseline,
+  Stack,
+} from '@mui/material';
 import * as Blockly from 'blockly/core';
 import { useEffect, useRef } from 'react';
 import { ReactBlockly } from './blockly/ReactBlockly';
@@ -37,17 +43,19 @@ export function App() {
 
   return (
     <Stack sx={{ width: '100dvw', height: '100dvh', overflow: 'hidden' }}>
-      <ButtonGroup
-        sx={{ margin: 1 }}
-        variant="outlined"
-        aria-label="Basic button group"
-      >
-        <Button>新規</Button>
-        <Button>開く</Button>
-        <Button>上書き保存</Button>
-        <Button>別名保存</Button>
-        <Button>Picoに書き込み</Button>
-      </ButtonGroup>
+      <ScopedCssBaseline>
+        <ButtonGroup
+          sx={{ margin: 1 }}
+          variant="outlined"
+          aria-label="Basic button group"
+        >
+          <Button>新規</Button>
+          <Button>開く</Button>
+          <Button>上書き保存</Button>
+          <Button>別名保存</Button>
+          <Button>Picoに書き込み</Button>
+        </ButtonGroup>
+      </ScopedCssBaseline>
 
       <Box sx={{ flex: 1 }}>
         <ReactBlockly ref={workspace} toolbox={toolbox} />

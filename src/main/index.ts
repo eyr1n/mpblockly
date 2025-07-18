@@ -10,6 +10,7 @@ async function createWindow() {
       preload: resolve(import.meta.dirname, '../preload/index.cjs'),
     },
   });
+
   mainWindow.setMenuBarVisibility(false);
 
   if (app.isPackaged) {
