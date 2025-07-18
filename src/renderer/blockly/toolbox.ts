@@ -1,6 +1,9 @@
 import 'blockly/blocks';
 import * as Blockly from 'blockly/core';
+import * as Ja from 'blockly/msg/ja';
 import { type PythonGenerator, pythonGenerator } from 'blockly/python';
+
+Blockly.setLocale(Ja.default ?? Ja);
 
 export interface CategoryToolbox {
   kind: 'categoryToolbox';

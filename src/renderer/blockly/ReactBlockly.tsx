@@ -1,12 +1,9 @@
 import 'blockly/blocks';
 import * as Blockly from 'blockly/core';
-import * as Ja from 'blockly/msg/ja';
 import { type RefObject, useEffect, useRef } from 'react';
 import type { CategoryToolbox } from './toolbox';
 
-Blockly.setLocale(Ja.default ?? Ja);
-
-interface BlocklyProps {
+export interface BlocklyProps {
   ref: RefObject<Blockly.Workspace | null>;
   toolbox: CategoryToolbox;
 }
