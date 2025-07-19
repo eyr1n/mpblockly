@@ -1,28 +1,73 @@
 import * as Blockly from 'blockly/core';
 import { type PythonGenerator, pythonGenerator } from 'blockly/python';
 
-export interface FlyoutToolbox {
-  kind: 'flyoutToolbox';
-  contents: Block[];
-}
+type Merge<T, U> = Omit<T, keyof U> & U;
 
-export interface CategoryToolbox {
-  kind: 'categoryToolbox';
-  contents: Category[];
-}
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export interface Category {
-  kind: 'category';
-  name: string;
-  contents: (Category | Block)[];
-}
+type MakeUndefinedOptional<T> = PartialBy<
+  T,
+  {
+    [K in keyof T]: undefined extends T[K] ? K : never;
+  }[keyof T]
+>;
 
-export interface Block {
-  kind: 'block';
-  type: string;
-}
+type FlyoutToolbox = Merge<
+  Blockly.utils.toolbox.ToolboxInfo,
+  {
+    kind: 'flyoutToolbox';
+    contents: FlyoutItem[];
+  }
+>;
 
-export interface BlockDefinition {
+type CategoryToolbox = Merge<
+  Blockly.utils.toolbox.ToolboxInfo,
+  {
+    kind: 'categoryToolbox';
+    contents: StaticCategory[];
+  }
+>;
+
+type StaticCategory = Merge<
+  MakeUndefinedOptional<Blockly.utils.toolbox.StaticCategoryInfo>,
+  {
+    kind: 'category';
+    contents: (StaticCategory | FlyoutItem)[];
+  }
+>;
+
+type FlyoutItem = Block | Separator | Button | Label;
+
+type Block = Merge<
+  Blockly.utils.toolbox.BlockInfo,
+  {
+    kind: 'block';
+    type: string;
+  }
+>;
+
+type Separator = Merge<
+  MakeUndefinedOptional<Blockly.utils.toolbox.SeparatorInfo>,
+  {
+    kind: 'sep';
+  }
+>;
+
+type Button = Merge<
+  Blockly.utils.toolbox.ButtonInfo,
+  {
+    kind: 'button';
+  }
+>;
+
+type Label = Merge<
+  MakeUndefinedOptional<Blockly.utils.toolbox.LabelInfo>,
+  {
+    kind: 'label';
+  }
+>;
+
+interface BlockDefinition {
   generator(
     block: Blockly.Block,
     generator: PythonGenerator,
@@ -37,7 +82,7 @@ export function flyoutToolbox(contents: Block[]): FlyoutToolbox {
   };
 }
 
-export function categoryToolbox(contents: Category[]): CategoryToolbox {
+export function categoryToolbox(contents: StaticCategory[]): CategoryToolbox {
   return {
     kind: 'categoryToolbox',
     contents,
@@ -45,24 +90,50 @@ export function categoryToolbox(contents: Category[]): CategoryToolbox {
 }
 
 export function category(
-  name: string,
-  contents: (Category | Block)[],
-): Category {
+  options: Omit<StaticCategory, 'kind' | 'contents'>,
+  contents: (StaticCategory | FlyoutItem)[],
+): StaticCategory {
   return {
+    ...options,
     kind: 'category',
-    name,
     contents,
   };
 }
 
-export function block(type: string, blockDefinition?: BlockDefinition): Block {
+export function block(
+  options: Omit<Block, 'kind'>,
+  blockDefinition?: BlockDefinition,
+): Block {
   if (blockDefinition) {
     const { generator, ...definition } = blockDefinition;
-    Blockly.common.defineBlocksWithJsonArray([{ ...definition, type }]);
-    pythonGenerator.forBlock[type] = generator;
+    Blockly.common.defineBlocksWithJsonArray([
+      { ...definition, type: options.type },
+    ]);
+    pythonGenerator.forBlock[options.type] = generator;
   }
   return {
     kind: 'block',
-    type,
+    type: options.type,
+  };
+}
+
+export function separator(options: Omit<Separator, 'kind'>): Separator {
+  return {
+    ...options,
+    kind: 'sep',
+  };
+}
+
+export function button(options: Omit<Button, 'kind'>): Button {
+  return {
+    ...options,
+    kind: 'button',
+  };
+}
+
+export function label(options: Omit<Label, 'kind'>): Label {
+  return {
+    ...options,
+    kind: 'label',
   };
 }

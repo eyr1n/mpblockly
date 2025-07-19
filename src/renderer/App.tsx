@@ -78,7 +78,7 @@ export function App() {
       </div>
 
       <div className="grow">
-        <ReactBlockly ref={workspace} toolbox={toolbox} />
+        <ReactBlockly ref={workspace} options={{ toolbox }} />
       </div>
     </div>
   );

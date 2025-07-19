@@ -1,12 +1,16 @@
 import { example } from './example';
-import { block, category, categoryToolbox } from './utils';
+import { block, category, categoryToolbox, flyoutToolbox } from './utils';
 
 export default categoryToolbox([
-  category('大カテゴリ', [
+  category({ name: '大カテゴリ' }, [
     example,
-    category('小カテゴリ', [
-      block('controls_whileUntil'),
-      block('controls_if'),
+    category({ name: '小カテゴリ' }, [
+      category({ name: '小カテゴリ' }, [
+        block({ type: 'controls_whileUntil' }),
+        block({ type: 'controls_if' }),
+      ]),
+      block({ type: 'controls_whileUntil' }),
+      block({ type: 'controls_if' }),
     ]),
   ]),
 ]);

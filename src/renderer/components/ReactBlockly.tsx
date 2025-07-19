@@ -1,13 +1,12 @@
 import * as Blockly from 'blockly/core';
 import { type RefObject, useEffect, useRef } from 'react';
-import type { CategoryToolbox, FlyoutToolbox } from '../toolbox/utils';
 
 interface BlocklyProps {
   ref: RefObject<Blockly.Workspace | null>;
-  toolbox: FlyoutToolbox | CategoryToolbox;
+  options: Blockly.BlocklyOptions;
 }
 
-export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
+export function ReactBlockly({ ref, options }: BlocklyProps) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,14 +14,14 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
       return;
     }
 
-    const workspace = Blockly.inject(container.current, { toolbox });
+    const workspace = Blockly.inject(container.current, options);
     ref.current = workspace;
 
     return () => {
       ref.current = null;
       workspace.dispose();
     };
-  }, [ref, toolbox]);
+  }, [ref, options]);
 
   return (
     <div className="relative h-full w-full">
