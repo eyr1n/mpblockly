@@ -11,5 +11,6 @@ export interface ElectronAPI {
   saveWorkspaceDialog: () => Promise<SaveDialogReturnValue>;
   beforeCloseDialog: () => Promise<MessageBoxReturnValue>;
   closeWindow: () => Promise<void>;
+  flashToPico: () => Promise<void>;
   onBeforeClose: (listener: () => void) => () => void;
 }

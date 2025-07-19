@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveWorkspaceDialog: () => ipcRenderer.invoke('save-workspace-dialog'),
   beforeCloseDialog: () => ipcRenderer.invoke('before-close-dialog'),
   closeWindow: () => ipcRenderer.invoke('close-window'),
+  flashToPico: () => ipcRenderer.invoke('flash-to-pico'),
   onBeforeClose: (listener: () => void) => {
     const wrapper = () => {
       listener();

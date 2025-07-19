@@ -8,6 +8,14 @@ import {
   type SaveDialogReturnValue,
 } from 'electron';
 
+function getWindowFromEvent(event: IpcMainInvokeEvent): BrowserWindow {
+  const window = BrowserWindow.fromWebContents(event.sender);
+  if (!window) {
+    throw new Error('window is null');
+  }
+  return window;
+}
+
 export function readWorkspace(
   _: IpcMainInvokeEvent,
   file: string,
@@ -64,10 +72,6 @@ export function closeWindow(event: IpcMainInvokeEvent) {
   getWindowFromEvent(event).destroy();
 }
 
-function getWindowFromEvent(event: IpcMainInvokeEvent): BrowserWindow {
-  const window = BrowserWindow.fromWebContents(event.sender);
-  if (!window) {
-    throw new Error('window is null');
-  }
-  return window;
+export function flashToPico() {
+  // TODO
 }

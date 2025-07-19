@@ -3,6 +3,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import {
   beforeCloseDialog,
   closeWindow,
+  flashToPico,
   openWorkspaceDialog,
   readWorkspace,
   saveWorkspaceDialog,
@@ -16,6 +17,7 @@ async function createWindow() {
       preload: resolve(import.meta.dirname, '../preload/index.cjs'),
     },
   });
+
   mainWindow.setMenuBarVisibility(false);
 
   if (app.isPackaged) {
@@ -39,6 +41,8 @@ app.whenReady().then(() => {
   ipcMain.handle('save-workspace-dialog', saveWorkspaceDialog);
   ipcMain.handle('before-close-dialog', beforeCloseDialog);
   ipcMain.handle('close-window', closeWindow);
+  ipcMain.handle('flash-to-pico', flashToPico);
+
   createWindow();
 
   app.on('activate', () => {
