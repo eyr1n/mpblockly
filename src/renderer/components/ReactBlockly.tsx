@@ -26,7 +26,7 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
 
   return (
     <div className="relative h-full w-full">
-      <div className="absolute box-content h-full w-full" ref={container} />
+      <div className="absolute h-full w-full" ref={container} />
     </div>
   );
 }
