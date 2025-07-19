@@ -1,9 +1,9 @@
 import * as Blockly from 'blockly/core';
 import { useEffect, useRef, useState } from 'react';
-import { ReactBlockly } from './blockly/ReactBlockly';
+import { unchi } from './blockly/blocks';
 import { block, category, categoryToolbox } from './blockly/toolbox';
-import { unchi } from './blocks';
 import { Button } from './components/Button';
+import { ReactBlockly } from './components/ReactBlockly';
 import { FileManager } from './file';
 
 const toolbox = categoryToolbox([

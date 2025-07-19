@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly/core';
 import { type RefObject, useEffect, useRef } from 'react';
-import type { CategoryToolbox } from './toolbox';
+import type { CategoryToolbox } from '../blockly/toolbox';
 
 interface BlocklyProps {
   ref: RefObject<Blockly.Workspace | null>;

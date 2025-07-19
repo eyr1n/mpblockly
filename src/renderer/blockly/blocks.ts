@@ -1,5 +1,5 @@
 import { Order } from 'blockly/python';
-import { block, category } from './blockly/toolbox';
+import { block, category } from './toolbox';
 
 export const unchi = category('うんち', [
   block('string_length', {
