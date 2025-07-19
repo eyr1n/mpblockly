@@ -1,5 +1,5 @@
 import { example } from './example';
-import { block, category, categoryToolbox, flyoutToolbox } from './utils';
+import { block, category, categoryToolbox } from './utils';
 
 export default categoryToolbox([
   category({ name: '大カテゴリ' }, [

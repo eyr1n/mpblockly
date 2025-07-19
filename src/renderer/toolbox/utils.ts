@@ -1,5 +1,4 @@
-import * as Blockly from 'blockly/core';
-import { type PythonGenerator, pythonGenerator } from 'blockly/python';
+import type * as Blockly from 'blockly/core';
 
 type Merge<T, U> = Omit<T, keyof U> & U;
 
@@ -67,14 +66,6 @@ type Label = Merge<
   }
 >;
 
-interface BlockDefinition {
-  generator(
-    block: Blockly.Block,
-    generator: PythonGenerator,
-  ): [string, number] | string | null;
-  [key: string]: unknown;
-}
-
 export function flyoutToolbox(contents: Block[]): FlyoutToolbox {
   return {
     kind: 'flyoutToolbox',
@@ -102,15 +93,9 @@ export function category(
 
 export function block(
   options: Omit<Block, 'kind'>,
-  blockDefinition?: BlockDefinition,
+  blockDefinition?: (type: string) => void,
 ): Block {
-  if (blockDefinition) {
-    const { generator, ...definition } = blockDefinition;
-    Blockly.common.defineBlocksWithJsonArray([
-      { ...definition, type: options.type },
-    ]);
-    pythonGenerator.forBlock[options.type] = generator;
-  }
+  blockDefinition?.(options.type);
   return {
     kind: 'block',
     type: options.type,
