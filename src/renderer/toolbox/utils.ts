@@ -102,7 +102,7 @@ export function block(
   };
 }
 
-export function separator(options: Omit<Separator, 'kind'>): Separator {
+export function separator(options?: Omit<Separator, 'kind'>): Separator {
   return {
     ...options,
     kind: 'sep',
