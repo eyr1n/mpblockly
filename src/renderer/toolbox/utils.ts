@@ -1,6 +1,11 @@
 import * as Blockly from 'blockly/core';
 import { type PythonGenerator, pythonGenerator } from 'blockly/python';
 
+export interface FlyoutToolbox {
+  kind: 'flyoutToolbox';
+  contents: Block[];
+}
+
 export interface CategoryToolbox {
   kind: 'categoryToolbox';
   contents: Category[];
@@ -25,6 +30,13 @@ export interface BlockDefinition {
   [key: string]: unknown;
 }
 
+export function flyoutToolbox(contents: Block[]): FlyoutToolbox {
+  return {
+    kind: 'flyoutToolbox',
+    contents,
+  };
+}
+
 export function categoryToolbox(contents: Category[]): CategoryToolbox {
   return {
     kind: 'categoryToolbox',
@@ -44,7 +56,7 @@ export function category(
 }
 
 export function block(type: string, blockDefinition?: BlockDefinition): Block {
-  if (blockDefinition != null) {
+  if (blockDefinition) {
     const { generator, ...definition } = blockDefinition;
     Blockly.common.defineBlocksWithJsonArray([{ ...definition, type }]);
     pythonGenerator.forBlock[type] = generator;

@@ -1,23 +1,9 @@
 import * as Blockly from 'blockly/core';
 import { useEffect, useRef, useState } from 'react';
-import { unchi } from './blockly/blocks';
-import { block, category, categoryToolbox } from './blockly/toolbox';
 import { Button } from './components/Button';
 import { ReactBlockly } from './components/ReactBlockly';
 import { FileManager } from './file';
-
-const toolbox = categoryToolbox([
-  category('ほげ', [
-    unchi,
-    block('text'),
-    category('ほげ1', [
-      unchi,
-      block('controls_whileUntil'),
-      block('controls_if'),
-    ]),
-    block('controls_if'),
-  ]),
-]);
+import toolbox from './toolbox';
 
 const fileManager = new FileManager();
 

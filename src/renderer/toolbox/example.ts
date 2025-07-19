@@ -1,7 +1,8 @@
 import { Order } from 'blockly/python';
-import { block, category } from './toolbox';
+import { block, category } from './utils';
 
-export const unchi = category('うんち', [
+export const example = category('サンプル', [
+  block('text'),
   block('string_length', {
     message0: 'length of %1',
     args0: [
@@ -21,5 +22,4 @@ export const unchi = category('うんち', [
       return [`len(${argument0})`, Order.MEMBER];
     },
   }),
-  block('text'),
 ]);
