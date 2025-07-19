@@ -1,65 +1,13 @@
-import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import {
-  app,
-  BrowserWindow,
-  dialog,
-  type IpcMainInvokeEvent,
-  ipcMain,
-  type MessageBoxReturnValue,
-  type OpenDialogReturnValue,
-  type SaveDialogReturnValue,
-} from 'electron';
+  readTextFile,
+  showConfirmDialog,
+  showOpenDialog,
+  showSaveDialog,
+  writeTextFile,
+} from './handlers.js';
 import { startViteServer } from './server.js';
-
-function readTextFile(_: IpcMainInvokeEvent, file: string): Promise<string> {
-  return readFile(file, { encoding: 'utf-8' });
-}
-
-function writeTextFile(
-  _: IpcMainInvokeEvent,
-  file: string,
-  data: string,
-): Promise<void> {
-  return writeFile(file, data, { encoding: 'utf-8' });
-}
-
-function showOpenDialog(
-  event: IpcMainInvokeEvent,
-): Promise<OpenDialogReturnValue> {
-  const window = BrowserWindow.fromWebContents(event.sender);
-  if (!window) {
-    throw new Error('');
-  }
-  return dialog.showOpenDialog(window, {
-    filters: [
-      {
-        name: 'mpblockly workspace',
-        extensions: ['mpblockly'],
-      },
-    ],
-  });
-}
-
-function showSaveDialog(): Promise<SaveDialogReturnValue> {
-  return dialog.showSaveDialog({
-    filters: [
-      {
-        name: 'mpblockly workspace',
-        extensions: ['mpblockly'],
-      },
-    ],
-  });
-}
-
-function showConfirmDialog(): Promise<MessageBoxReturnValue> {
-  return dialog.showMessageBox({
-    type: 'warning',
-    message: 'ワークスペースの変更を保存しますか?',
-    buttons: ['保存しない', 'キャンセル', '保存'],
-    cancelId: 1,
-  });
-}
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({
