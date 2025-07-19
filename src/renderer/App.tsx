@@ -23,7 +23,7 @@ const fileManager = new FileManager();
 export function App() {
   const workspace = useRef<Blockly.Workspace>(null);
 
-  const [currentState, setCurrentState] = useState('{}');
+  const [currentState, _setCurrentState] = useState('{}');
 
   useEffect(() => {
     const dispose = window.electronAPI.onBeforeClose(() => {
@@ -45,8 +45,8 @@ export function App() {
   }, [currentState]);
 
   return (
-    <div className="w-dvw h-dvh overflow-hidden flex flex-col">
-      <div className="flex m-2 gap-2">
+    <div className="flex h-dvh w-dvw flex-col overflow-hidden">
+      <div className="m-2 flex gap-2">
         <button
           type="button"
           onClick={async () => {

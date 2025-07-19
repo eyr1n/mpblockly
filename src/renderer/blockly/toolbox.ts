@@ -45,9 +45,6 @@ export function category(
 
 export function block(type: string, blockDefinition?: BlockDefinition): Block {
   if (blockDefinition != null) {
-    if (type in Blockly.Blocks || type in pythonGenerator.forBlock) {
-      throw new Error(`"${type}" has already been declared`);
-    }
     const { generator, ...definition } = blockDefinition;
     Blockly.common.defineBlocksWithJsonArray([{ ...definition, type }]);
     pythonGenerator.forBlock[type] = generator;

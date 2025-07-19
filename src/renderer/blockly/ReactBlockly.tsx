@@ -1,6 +1,4 @@
-import 'blockly/blocks';
 import * as Blockly from 'blockly/core';
-import * as Ja from 'blockly/msg/ja';
 import { type RefObject, useEffect, useRef } from 'react';
 import type { CategoryToolbox } from './toolbox';
 
@@ -17,7 +15,6 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
       return;
     }
 
-    Blockly.setLocale(Ja.default ?? Ja);
     const workspace = Blockly.inject(container.current, { toolbox });
     ref.current = workspace;
 
@@ -28,8 +25,8 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
   }, [ref, toolbox]);
 
   return (
-    <div className="relative w-full h-full">
-      <div className="absolute w-full h-full box-content" ref={container} />
+    <div className="relative h-full w-full">
+      <div className="absolute box-content h-full w-full" ref={container} />
     </div>
   );
 }
