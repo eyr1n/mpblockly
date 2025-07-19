@@ -35,7 +35,7 @@ async function createWindow() {
 app.whenReady().then(() => {
   ipcMain.handle('read-workspace', readWorkspace);
   ipcMain.handle('write-workspace', writeWorkspace);
-  ipcMain.handle('open-workspace-dlalog', openWorkspaceDialog);
+  ipcMain.handle('open-workspace-dialog', openWorkspaceDialog);
   ipcMain.handle('save-workspace-dialog', saveWorkspaceDialog);
   ipcMain.handle('before-close-dialog', beforeCloseDialog);
   ipcMain.handle('close-window', closeWindow);
