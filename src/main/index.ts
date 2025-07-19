@@ -6,56 +6,53 @@ import {
   dialog,
   type IpcMainInvokeEvent,
   ipcMain,
+  type MessageBoxReturnValue,
+  type OpenDialogReturnValue,
+  type SaveDialogReturnValue,
 } from 'electron';
 import { startViteServer } from './server.js';
 
-async function workspaceOpen(): Promise<{
-  path: string;
-  workspace: unknown;
-} | null> {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    filters: [
-      {
-        name: '.mpblockly',
-        extensions: ['mpblockly'],
-      },
-    ],
-  });
-  if (canceled) {
-    return null;
-  }
-  const path = filePaths[0];
-  const workspace = await readFile(path, { encoding: 'utf-8' }).then((text) =>
-    JSON.parse(text),
-  );
-  return { path, workspace };
+function readTextFile(_: IpcMainInvokeEvent, file: string): Promise<string> {
+  return readFile(file, { encoding: 'utf-8' });
 }
 
-async function workspaceSave(
+function writeTextFile(
   _: IpcMainInvokeEvent,
-  path: string,
-  workspace: unknown,
+  file: string,
+  data: string,
 ): Promise<void> {
-  await writeFile(path, JSON.stringify(workspace));
+  return writeFile(file, data, { encoding: 'utf-8' });
 }
 
-async function workspaceSaveAs(
-  _: IpcMainInvokeEvent,
-  workspace: unknown,
-): Promise<boolean> {
-  const { canceled, filePath } = await dialog.showSaveDialog({
+function showOpenDialog(): Promise<OpenDialogReturnValue> {
+  return dialog.showOpenDialog({
     filters: [
       {
-        name: '.mpblockly',
+        name: 'mpblockly workspace',
         extensions: ['mpblockly'],
       },
     ],
   });
-  if (canceled) {
-    return false;
-  }
-  await writeFile(filePath, JSON.stringify(workspace));
-  return true;
+}
+
+function showSaveDialog(): Promise<SaveDialogReturnValue> {
+  return dialog.showSaveDialog({
+    filters: [
+      {
+        name: 'mpblockly workspace',
+        extensions: ['mpblockly'],
+      },
+    ],
+  });
+}
+
+function showConfirmDialog(): Promise<MessageBoxReturnValue> {
+  return dialog.showMessageBox({
+    type: 'warning',
+    message: 'ワークスペースの変更を保存しますか?',
+    buttons: ['保存しない', 'キャンセル', '保存'],
+    cancelId: 1,
+  });
 }
 
 async function createWindow() {
@@ -76,12 +73,19 @@ async function createWindow() {
   } else {
     mainWindow.loadURL(await startViteServer());
   }
+
+  mainWindow.on('close', (event) => {
+    event.preventDefault();
+    mainWindow.webContents.send('window:before-close');
+  });
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('workspaceOpen', workspaceOpen);
-  ipcMain.handle('workspaceSave', workspaceSave);
-  ipcMain.handle('workspaceSaveAs', workspaceSaveAs);
+  ipcMain.handle('readTextFile', readTextFile);
+  ipcMain.handle('writeTextFile', writeTextFile);
+  ipcMain.handle('showOpenDialog', showOpenDialog);
+  ipcMain.handle('showSaveDialog', showSaveDialog);
+  ipcMain.handle('showConfirmDialog', showConfirmDialog);
 
   createWindow();
 

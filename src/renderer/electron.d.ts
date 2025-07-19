@@ -1,10 +1,16 @@
+import {
+  type MessageBoxReturnValue,
+  type OpenDialogReturnValue,
+  type SaveDialogReturnValue,
+} from 'electron';
+
 export interface IElectronAPI {
-  workspaceOpen: () => Promise<{
-    path: string;
-    workspace: unknown;
-  } | null>;
-  workspaceSave: (path: string, workspace: unknown) => Promise<void>;
-  workspaceSaveAs: (workspace: unknown) => Promise<boolean>;
+  readTextFile: (file: string) => Promise<string>;
+  writeTextFile: (file: string, data: string) => Promise<void>;
+  showOpenDialog: () => Promise<OpenDialogReturnValue>;
+  showSaveDialog: () => Promise<SaveDialogReturnValue>;
+  showConfirmDialog: () => Promise<MessageBoxReturnValue>;
+  onBeforeClose: (listener: () => void) => () => void;
 }
 
 declare global {

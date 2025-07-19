@@ -6,10 +6,11 @@ import {
   Stack,
 } from '@mui/material';
 import * as Blockly from 'blockly/core';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ReactBlockly } from './blockly/ReactBlockly';
 import { block, category, categoryToolbox } from './blockly/toolbox';
 import { unchi } from './blocks';
+import { FileManager } from './file';
 
 const toolbox = categoryToolbox([
   category('ほげ', [
@@ -24,22 +25,31 @@ const toolbox = categoryToolbox([
   ]),
 ]);
 
+const fileManager = new FileManager();
+
 export function App() {
   const workspace = useRef<Blockly.Workspace>(null);
 
+  const [currentState, setCurrentState] = useState('{}');
+
   useEffect(() => {
-    const id = setInterval(() => {
-      if (workspace.current) {
-        const state = Blockly.serialization.workspaces.save(workspace.current);
-        console.log(state);
-        //Blockly.serialization.workspaces.load(state, workspace);
+    const dispose = window.electronAPI.onBeforeClose(() => {
+      if (!workspace.current) {
+        return;
       }
-    }, 1000);
+      const state = JSON.stringify(
+        Blockly.serialization.workspaces.save(workspace.current),
+      );
+      if (currentState !== state) {
+        fileManager.setDirty();
+        fileManager.promptToSaveOnQuit(state);
+      }
+    });
 
     return () => {
-      clearInterval(id);
+      dispose();
     };
-  }, []);
+  }, [currentState]);
 
   return (
     <Stack sx={{ width: '100dvw', height: '100dvh', overflow: 'hidden' }}>
@@ -49,15 +59,15 @@ export function App() {
           variant="outlined"
           aria-label="Basic button group"
         >
-          <Button>新規</Button>
           <Button
             onClick={async () => {
-              const state = await window.electronAPI.workspaceOpen();
-              if (state) {
-                Blockly.serialization.workspaces.load(
-                  state.workspace,
-                  workspace.current,
-                );
+              if (!workspace.current) {
+                return;
+              }
+              const data = await fileManager.open();
+              if (data) {
+                const state = JSON.parse(data);
+                Blockly.serialization.workspaces.load(state, workspace.current);
               }
             }}
           >
@@ -65,15 +75,30 @@ export function App() {
           </Button>
           <Button
             onClick={async () => {
+              if (!workspace.current) {
+                return;
+              }
               const state = Blockly.serialization.workspaces.save(
                 workspace.current,
               );
-              await window.electronAPI.workspaceSaveAs(state);
+              await fileManager.save(JSON.stringify(state));
             }}
           >
             上書き保存
           </Button>
-          <Button>別名保存</Button>
+          <Button
+            onClick={async () => {
+              if (!workspace.current) {
+                return;
+              }
+              const state = Blockly.serialization.workspaces.save(
+                workspace.current,
+              );
+              await fileManager.saveAs(JSON.stringify(state));
+            }}
+          >
+            別名保存
+          </Button>
           <Button>Picoに書き込み</Button>
         </ButtonGroup>
       </ScopedCssBaseline>

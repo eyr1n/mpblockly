@@ -1,9 +1,16 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  workspaceOpen: () => ipcRenderer.invoke('workspaceOpen'),
-  workspaceSave: (path: string, workspace: unknown) =>
-    ipcRenderer.invoke('workspaceSave', path, workspace),
-  workspaceSaveAs: (workspace: unknown) =>
-    ipcRenderer.invoke('workspaceSaveAs', workspace),
+  readTextFile: (file: string) => ipcRenderer.invoke('readTextFile', file),
+  writeTextFile: (file: string, data: string) =>
+    ipcRenderer.invoke('writeTextFile', file, data),
+  showOpenDialog: () => ipcRenderer.invoke('showOpenDialog'),
+  showSaveDialog: () => ipcRenderer.invoke('showSaveDialog'),
+  showConfirmDialog: () => ipcRenderer.invoke('showConfirmDialog'),
+  onBeforeClose: (listener: () => void) => {
+    ipcRenderer.on('window:before-close', listener);
+    return () => {
+      ipcRenderer.off('window:before-close', listener);
+    };
+  },
 });

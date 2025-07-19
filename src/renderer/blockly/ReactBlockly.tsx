@@ -9,14 +9,14 @@ export interface BlocklyProps {
 }
 
 export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
-  const blocklyRef = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!blocklyRef.current) {
+    if (!container.current) {
       return;
     }
 
-    const workspace = Blockly.inject(blocklyRef.current, { toolbox });
+    const workspace = Blockly.inject(container.current, { toolbox });
     ref.current = workspace;
 
     return () => {
@@ -34,7 +34,7 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
       }}
     >
       <div
-        ref={blocklyRef}
+        ref={container}
         style={{
           position: 'absolute',
           width: '100%',
