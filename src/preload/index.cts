@@ -1,7 +1,5 @@
+import { contextBridge, ipcRenderer } from 'electron';
 import type { ElectronAPI } from '../types/preload';
-
-const { contextBridge, ipcRenderer } =
-  require('electron') as typeof import('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   readWorkspace: (file: string) => ipcRenderer.invoke('read-workspace', file),
