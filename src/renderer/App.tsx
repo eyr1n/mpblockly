@@ -46,7 +46,7 @@ export function App() {
 
   return (
     <div className="w-dvw h-dvh overflow-hidden flex flex-col">
-      <div>
+      <div className="flex m-2 gap-2">
         <button
           type="button"
           onClick={async () => {
