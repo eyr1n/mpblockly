@@ -8,14 +8,14 @@ import {
   type SaveDialogReturnValue,
 } from 'electron';
 
-export function readTextFile(
+export function readWorkspace(
   _: IpcMainInvokeEvent,
   file: string,
 ): Promise<string> {
   return readFile(file, { encoding: 'utf-8' });
 }
 
-export function writeTextFile(
+export function writeWorkspace(
   _: IpcMainInvokeEvent,
   file: string,
   data: string,
@@ -23,41 +23,45 @@ export function writeTextFile(
   return writeFile(file, data, { encoding: 'utf-8' });
 }
 
-export function showOpenDialog(
+export function openWorkspaceDialog(
   event: IpcMainInvokeEvent,
 ): Promise<OpenDialogReturnValue> {
   return dialog.showOpenDialog(getWindowFromEvent(event), {
     filters: [
       {
-        name: 'mpblockly workspace',
+        name: 'mpblockly ワークスペース',
         extensions: ['mpblockly'],
       },
     ],
   });
 }
 
-export function showSaveDialog(
+export function saveWorkspaceDialog(
   event: IpcMainInvokeEvent,
 ): Promise<SaveDialogReturnValue> {
   return dialog.showSaveDialog(getWindowFromEvent(event), {
     filters: [
       {
-        name: 'mpblockly workspace',
+        name: 'mpblockly ワークスペース',
         extensions: ['mpblockly'],
       },
     ],
   });
 }
 
-export function showConfirmDialog(
+export function beforeCloseDialog(
   event: IpcMainInvokeEvent,
 ): Promise<MessageBoxReturnValue> {
   return dialog.showMessageBox(getWindowFromEvent(event), {
     type: 'warning',
-    message: 'ワークスペースの変更を保存しますか?',
+    message: '保存されていない変更を保存しますか?',
     buttons: ['保存しない', 'キャンセル', '保存'],
     cancelId: 1,
   });
+}
+
+export function closeWindow(event: IpcMainInvokeEvent) {
+  getWindowFromEvent(event).destroy();
 }
 
 function getWindowFromEvent(event: IpcMainInvokeEvent): BrowserWindow {

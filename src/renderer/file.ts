@@ -7,11 +7,12 @@ export class FileManager {
   }
 
   async open() {
-    const { canceled, filePaths } = await window.electronAPI.showOpenDialog();
+    const { canceled, filePaths } =
+      await window.electronAPI.openWorkspaceDialog();
     if (canceled) {
       return;
     }
-    const data = await window.electronAPI.readTextFile(filePaths[0]);
+    const data = await window.electronAPI.readWorkspace(filePaths[0]);
     this.#path = filePaths[0];
     this.#dirty = false;
     return data;
@@ -21,16 +22,17 @@ export class FileManager {
     if (this.#path == null) {
       return this.saveAs(data);
     }
-    await window.electronAPI.writeTextFile(this.#path, data);
+    await window.electronAPI.writeWorkspace(this.#path, data);
     this.#dirty = false;
   }
 
   async saveAs(data: string) {
-    const { canceled, filePath } = await window.electronAPI.showSaveDialog();
+    const { canceled, filePath } =
+      await window.electronAPI.saveWorkspaceDialog();
     if (canceled) {
       return;
     }
-    await window.electronAPI.writeTextFile(filePath, data);
+    await window.electronAPI.writeWorkspace(filePath, data);
     this.#path = filePath;
     this.#dirty = false;
   }
@@ -39,7 +41,7 @@ export class FileManager {
     if (!this.#dirty) {
       return true;
     }
-    const { response } = await window.electronAPI.showConfirmDialog();
+    const { response } = await window.electronAPI.beforeCloseDialog();
     switch (response) {
       case 0:
         return true;

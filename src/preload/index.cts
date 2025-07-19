@@ -1,16 +1,35 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import type {
+  MessageBoxReturnValue,
+  OpenDialogReturnValue,
+  SaveDialogReturnValue,
+} from 'electron';
 
-contextBridge.exposeInMainWorld('electronAPI', {
-  readTextFile: (file: string) => ipcRenderer.invoke('readTextFile', file),
-  writeTextFile: (file: string, data: string) =>
-    ipcRenderer.invoke('writeTextFile', file, data),
-  showOpenDialog: () => ipcRenderer.invoke('showOpenDialog'),
-  showSaveDialog: () => ipcRenderer.invoke('showSaveDialog'),
-  showConfirmDialog: () => ipcRenderer.invoke('showConfirmDialog'),
+const { contextBridge, ipcRenderer } =
+  require('electron') as typeof import('electron');
+
+const electronAPI = {
+  readWorkspace: (file: string): Promise<string> =>
+    ipcRenderer.invoke('read-workspace', file),
+  writeWorkspace: (file: string, data: string): Promise<void> =>
+    ipcRenderer.invoke('write-workspace', file, data),
+  openWorkspaceDialog: (): Promise<OpenDialogReturnValue> =>
+    ipcRenderer.invoke('open-workspace-dialog'),
+  saveWorkspaceDialog: (): Promise<SaveDialogReturnValue> =>
+    ipcRenderer.invoke('save-workspace-dialog'),
+  beforeCloseDialog: (): Promise<MessageBoxReturnValue> =>
+    ipcRenderer.invoke('before-close-dialog'),
+  closeWindow: () => ipcRenderer.invoke('close-window'),
   onBeforeClose: (listener: () => void) => {
-    ipcRenderer.on('window:before-close', listener);
+    const wrapper = () => {
+      listener();
+    };
+    ipcRenderer.on('before-close', wrapper);
     return () => {
-      ipcRenderer.off('window:before-close', listener);
+      ipcRenderer.off('before-close', wrapper);
     };
   },
-});
+};
+
+contextBridge.exposeInMainWorld('electronAPI', electronAPI);
+
+export type ElectronAPI = typeof electronAPI;

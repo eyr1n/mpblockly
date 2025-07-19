@@ -1,11 +1,12 @@
 import { resolve } from 'node:path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import {
-  readTextFile,
-  showConfirmDialog,
-  showOpenDialog,
-  showSaveDialog,
-  writeTextFile,
+  beforeCloseDialog,
+  closeWindow,
+  openWorkspaceDialog,
+  readWorkspace,
+  saveWorkspaceDialog,
+  writeWorkspace,
 } from './handlers.js';
 import { startViteServer } from './server.js';
 
@@ -27,17 +28,17 @@ async function createWindow() {
 
   mainWindow.on('close', (event) => {
     event.preventDefault();
-    mainWindow.webContents.send('window:before-close');
+    mainWindow.webContents.send('before-close');
   });
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('readTextFile', readTextFile);
-  ipcMain.handle('writeTextFile', writeTextFile);
-  ipcMain.handle('showOpenDialog', showOpenDialog);
-  ipcMain.handle('showSaveDialog', showSaveDialog);
-  ipcMain.handle('showConfirmDialog', showConfirmDialog);
-
+  ipcMain.handle('read-workspace', readWorkspace);
+  ipcMain.handle('write-workspace', writeWorkspace);
+  ipcMain.handle('open-workspace-dlalog', openWorkspaceDialog);
+  ipcMain.handle('save-workspace-dialog', saveWorkspaceDialog);
+  ipcMain.handle('before-close-dialog', beforeCloseDialog);
+  ipcMain.handle('close-window', closeWindow);
   createWindow();
 
   app.on('activate', () => {

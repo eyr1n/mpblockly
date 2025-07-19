@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ReactBlockly } from './blockly/ReactBlockly';
 import { block, category, categoryToolbox } from './blockly/toolbox';
 import { unchi } from './blocks';
+import { Button } from './components/Button';
 import { FileManager } from './file';
 
 const toolbox = categoryToolbox([
@@ -47,8 +48,7 @@ export function App() {
   return (
     <div className="flex h-dvh w-dvw flex-col overflow-hidden">
       <div className="m-2 flex gap-2">
-        <button
-          type="button"
+        <Button
           onClick={async () => {
             if (!workspace.current) {
               return;
@@ -61,9 +61,8 @@ export function App() {
           }}
         >
           開く
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           onClick={async () => {
             if (!workspace.current) {
               return;
@@ -75,9 +74,8 @@ export function App() {
           }}
         >
           上書き保存
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           onClick={async () => {
             if (!workspace.current) {
               return;
@@ -89,8 +87,8 @@ export function App() {
           }}
         >
           別名保存
-        </button>
-        <button type="button">Picoに書き込み</button>
+        </Button>
+        <Button onClick={() => {}}>Pico に書き込み</Button>
       </div>
 
       <div className="grow">
