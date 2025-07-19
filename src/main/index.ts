@@ -17,7 +17,6 @@ async function createWindow() {
       preload: resolve(import.meta.dirname, '../preload/index.cjs'),
     },
   });
-
   mainWindow.setMenuBarVisibility(false);
 
   if (app.isPackaged) {
@@ -32,15 +31,15 @@ async function createWindow() {
     event.preventDefault();
     mainWindow.webContents.send('window:before-close');
   });
+}
 
+app.whenReady().then(() => {
   ipcMain.handle('readTextFile', readTextFile);
   ipcMain.handle('writeTextFile', writeTextFile);
   ipcMain.handle('showOpenDialog', showOpenDialog);
   ipcMain.handle('showSaveDialog', showSaveDialog);
   ipcMain.handle('showConfirmDialog', showConfirmDialog);
-}
 
-app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', () => {
