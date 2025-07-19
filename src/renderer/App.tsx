@@ -1,10 +1,3 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  ScopedCssBaseline,
-  Stack,
-} from '@mui/material';
 import * as Blockly from 'blockly/core';
 import { useEffect, useRef, useState } from 'react';
 import { ReactBlockly } from './blockly/ReactBlockly';
@@ -52,60 +45,57 @@ export function App() {
   }, [currentState]);
 
   return (
-    <Stack sx={{ width: '100dvw', height: '100dvh', overflow: 'hidden' }}>
-      <ScopedCssBaseline>
-        <ButtonGroup
-          sx={{ margin: 1 }}
-          variant="outlined"
-          aria-label="Basic button group"
+    <div className="w-dvw h-dvh overflow-hidden flex flex-col">
+      <div>
+        <button
+          type="button"
+          onClick={async () => {
+            if (!workspace.current) {
+              return;
+            }
+            const data = await fileManager.open();
+            if (data) {
+              const state = JSON.parse(data);
+              Blockly.serialization.workspaces.load(state, workspace.current);
+            }
+          }}
         >
-          <Button
-            onClick={async () => {
-              if (!workspace.current) {
-                return;
-              }
-              const data = await fileManager.open();
-              if (data) {
-                const state = JSON.parse(data);
-                Blockly.serialization.workspaces.load(state, workspace.current);
-              }
-            }}
-          >
-            開く
-          </Button>
-          <Button
-            onClick={async () => {
-              if (!workspace.current) {
-                return;
-              }
-              const state = Blockly.serialization.workspaces.save(
-                workspace.current,
-              );
-              await fileManager.save(JSON.stringify(state));
-            }}
-          >
-            上書き保存
-          </Button>
-          <Button
-            onClick={async () => {
-              if (!workspace.current) {
-                return;
-              }
-              const state = Blockly.serialization.workspaces.save(
-                workspace.current,
-              );
-              await fileManager.saveAs(JSON.stringify(state));
-            }}
-          >
-            別名保存
-          </Button>
-          <Button>Picoに書き込み</Button>
-        </ButtonGroup>
-      </ScopedCssBaseline>
+          開く
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            if (!workspace.current) {
+              return;
+            }
+            const state = Blockly.serialization.workspaces.save(
+              workspace.current,
+            );
+            await fileManager.save(JSON.stringify(state));
+          }}
+        >
+          上書き保存
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            if (!workspace.current) {
+              return;
+            }
+            const state = Blockly.serialization.workspaces.save(
+              workspace.current,
+            );
+            await fileManager.saveAs(JSON.stringify(state));
+          }}
+        >
+          別名保存
+        </button>
+        <button type="button">Picoに書き込み</button>
+      </div>
 
-      <Box sx={{ flex: 1 }}>
+      <div className="grow">
         <ReactBlockly ref={workspace} toolbox={toolbox} />
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }

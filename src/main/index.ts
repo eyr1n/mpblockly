@@ -24,8 +24,14 @@ function writeTextFile(
   return writeFile(file, data, { encoding: 'utf-8' });
 }
 
-function showOpenDialog(): Promise<OpenDialogReturnValue> {
-  return dialog.showOpenDialog({
+function showOpenDialog(
+  event: IpcMainInvokeEvent,
+): Promise<OpenDialogReturnValue> {
+  const window = BrowserWindow.fromWebContents(event.sender);
+  if (!window) {
+    throw new Error('');
+  }
+  return dialog.showOpenDialog(window, {
     filters: [
       {
         name: 'mpblockly workspace',
@@ -78,15 +84,15 @@ async function createWindow() {
     event.preventDefault();
     mainWindow.webContents.send('window:before-close');
   });
-}
 
-app.whenReady().then(() => {
   ipcMain.handle('readTextFile', readTextFile);
   ipcMain.handle('writeTextFile', writeTextFile);
   ipcMain.handle('showOpenDialog', showOpenDialog);
   ipcMain.handle('showSaveDialog', showSaveDialog);
   ipcMain.handle('showConfirmDialog', showConfirmDialog);
+}
 
+app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', () => {

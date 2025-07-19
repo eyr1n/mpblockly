@@ -28,21 +28,8 @@ export function ReactBlockly({ ref, toolbox }: BlocklyProps) {
   }, [ref, toolbox]);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-      }}
-    >
-      <div
-        ref={container}
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-        }}
-      />
+    <div className="relative w-full h-full">
+      <div className="absolute w-full h-full box-content" ref={container} />
     </div>
   );
 }
