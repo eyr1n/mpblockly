@@ -1,5 +1,6 @@
-import { App } from '@mpblockly/app';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { App } from './App.js';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -8,4 +9,8 @@ import '@fontsource/roboto/700.css';
 
 import './style.css';
 
-createRoot(document.getElementById('root') as HTMLElement).render(<App />);
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

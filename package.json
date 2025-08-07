@@ -7,8 +7,8 @@
   "build": {
     "files": [
       "main/dist/**/*.js",
+      "preload/dist/**/*.js",
       "renderer/dist/**/*",
-      "packages/preload/dist/**/*.js",
       "LICENSE",
       "NOTICE"
     ]
@@ -18,22 +18,22 @@
     "build": "tsc --build && vite build renderer",
     "preview": "electron .",
     "package": "tsc --build && vite build renderer && electron-builder",
-    "biome": "biome check",
-    "preinstall": "npx only-allow npm"
+    "biome": "biome check"
   },
-  "workspaces": [
-    "packages/app",
-    "packages/preload"
-  ],
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.6",
-    "@mpblockly/app": "*",
-    "@mpblockly/preload": "*",
+    "@mui/icons-material": "^7.2.0",
+    "@mui/material": "^7.2.0",
+    "blockly": "^12.2.0",
+    "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "serialport": "^13.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.1",
+    "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
     "cross-env": "^7.0.3",

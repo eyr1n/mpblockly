@@ -2,8 +2,7 @@
   "files": [],
   "references": [
     { "path": "./main" },
-    { "path": "./renderer" },
-    { "path": "./packages/app" },
-    { "path": "./packages/preload" }
+    { "path": "./preload" },
+    { "path": "./renderer" }
   ]
 }

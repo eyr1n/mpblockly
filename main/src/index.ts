@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import {
   closeWindow,
@@ -19,7 +18,7 @@ async function createWindow() {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      preload: fileURLToPath(import.meta.resolve('@mpblockly/preload')),
+      preload: resolve(app.getAppPath(), './preload/dist/src/index.js'),
     },
   });
 
